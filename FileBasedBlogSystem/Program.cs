@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FileBlogSystem.Utils;
+using FileBlogSystem.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +45,24 @@ app.UseAuthorization();
 
 app.MapGet("/", () => Results.Ok("Welcome to FileBlogSystem!"));
 
+app.MapGet("/api/secure-data", () =>
+{
+    return Results.Ok("This is protected data.");
+}).RequireAuthorization();
+
+
+
+app.MapPost("/login", (User loginUser, IConfiguration config) =>
+{
+    if (loginUser.Username == "admin" && loginUser.Password == "admin123")
+    {
+        var roles = new List<string> { "Admin" };
+        var token = JwtTokenHelper.GenerateToken(loginUser.Username, roles, config);
+        return Results.Ok(new { token });
+    }
+
+    return Results.Unauthorized();
+});
 
 
 

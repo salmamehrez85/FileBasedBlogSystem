@@ -35,3 +35,4 @@ C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlog
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\obj\Debug\net9.0\FileBasedBlogSystem.pdb
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\obj\Debug\net9.0\FileBasedBlogSystem.genruntimeconfig.cache
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\obj\Debug\net9.0\ref\FileBasedBlogSystem.dll
+C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\obj\Debug\net9.0\FileBasedBlogSystem.sourcelink.json

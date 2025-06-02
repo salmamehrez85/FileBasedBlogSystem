@@ -1,6 +1,8 @@
 # Ignore build outputs
-FileBasedBlogSystem/obj/
-FileBasedBlogSystem/bin/
+**/obj/
+**/bin/
+obj/
+bin/
 
 # Ignore user-specific files
 *.user

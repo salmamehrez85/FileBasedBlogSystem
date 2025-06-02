@@ -8,20 +8,16 @@ using FileBlogSystem.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<FileBlogSystem.Services.PostService>();
 builder.Services.AddSingleton<ImageService>();
-
-
-
+builder.Services.AddSingleton<RssService>();
+builder.Services.AddSingleton<ConfigService>();
+builder.Services.AddSingleton<FileBlogSystem.Services.UserService>();
 
 var jwtSecretKey = builder.Configuration["Jwt:Key"] ?? "a1b2c3d4e5f67890123456789abcdef0fedcba9876543210abcdef1234567890";
 var key = Encoding.ASCII.GetBytes(jwtSecretKey);
-
-
-builder.Services.AddSingleton<FileBlogSystem.Services.UserService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -40,8 +36,6 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false
     };
 });
-
-
 
 builder.Services.AddAuthorization(options =>
 {
@@ -66,12 +60,10 @@ if (adminUser == null)
 }
 
 app.UseRouting(); 
-
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<JwtMiddleware>();
-
 
 app.MapGet("/", () => Results.Ok("Welcome to FileBlogSystem!"));
 
@@ -92,37 +84,34 @@ app.MapPost("/login", (User loginUser, IConfiguration config) =>
     return Results.Unauthorized();
 });
 
- app.MapPost("/posts/{slug}/upload", async (
-     HttpContext context,
-     string slug,
-     IFormFile file,
-     PostService postService,
-     ImageService imageService) =>
- {
-     var user = context.Items["User"] as User;
-     if (user == null) return Results.Unauthorized();
+app.MapPost("/posts/{slug}/upload", async (
+    HttpContext context,
+    string slug,
+    IFormFile file,
+    PostService postService,
+    ImageService imageService) =>
+{
+    var user = context.Items["User"] as User;
+    if (user == null) return Results.Unauthorized();
 
-     var post = postService.GetPostBySlug(slug);
-     if (post == null) return Results.NotFound("Post not found.");
+    var post = postService.GetPostBySlug(slug);
+    if (post == null) return Results.NotFound("Post not found.");
 
-     if (file == null || file.Length == 0)
-         return Results.BadRequest("No file was uploaded.");
+    if (file == null || file.Length == 0)
+        return Results.BadRequest("No file was uploaded.");
 
-     var postDir = Path.Combine("Content", "Posts", $"{post.PublishedDate:yyyy-MM-dd}-{post.Slug}", "assets");
-     Directory.CreateDirectory(postDir);
-     await imageService.SaveAndResizeImageAsync(file, postDir);
+    var postDir = Path.Combine("Content", "Posts", $"{post.PublishedDate:yyyy-MM-dd}-{post.Slug}", "assets");
+    Directory.CreateDirectory(postDir);
+    await imageService.SaveAndResizeImageAsync(file, postDir);
 
-     return Results.Ok("Image uploaded and resized.");
- }).RequireAuthorization().DisableAntiforgery();
- 
-
+    return Results.Ok("Image uploaded and resized.");
+}).RequireAuthorization().DisableAntiforgery();
 
 app.MapGet("/admin", () => Results.Ok("Admin area"))
    .RequireAuthorization("AdminOnly");
 
 app.MapGet("/editor", () => Results.Ok("Author or Editor area"))
    .RequireAuthorization("AuthorOrEditor");
-
 
 app.MapGet("/posts", (int? page, int? pageSize, [FromServices]PostService postService) =>
 {
@@ -137,14 +126,11 @@ app.MapGet("/posts", (int? page, int? pageSize, [FromServices]PostService postSe
     return Results.Ok(posts);
 });
 
-
 app.MapGet("/posts/{slug}", (string slug, [FromServices] PostService postService) =>
 {
     var post = postService.GetPostBySlug(slug);
     return post is not null ? Results.Ok(post) : Results.NotFound();
 });
-
-
 
 app.MapGet("/posts/category/{category}", (string category, [FromServices]PostService postService) =>
 {
@@ -155,7 +141,6 @@ app.MapGet("/posts/category/{category}", (string category, [FromServices]PostSer
     return Results.Ok(posts);
 });
 
-
 app.MapGet("/posts/tag/{tag}", (string tag, [FromServices]PostService postService) =>
 {
     var posts = postService.GetAllPosts()
@@ -164,7 +149,6 @@ app.MapGet("/posts/tag/{tag}", (string tag, [FromServices]PostService postServic
 
     return Results.Ok(posts);
 });
-
 
 app.MapGet("/posts/search", (string q, [FromServices]PostService postService) =>
 {
@@ -178,14 +162,18 @@ app.MapGet("/posts/search", (string q, [FromServices]PostService postService) =>
     return Results.Ok(posts);
 });
 
-
-builder.Services.AddSingleton<RssService>();
-var rssService = app.Services.GetRequiredService<RssService>();
-
-app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] (BlogPost post, HttpContext context, [FromServices]PostService postService) =>
+app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] (BlogPost post, HttpContext context, [FromServices]PostService postService, [FromServices]RssService rssService) =>
 {
     var user = context.Items["User"] as User;
     if (user == null) return Results.Unauthorized();
+
+
+    if (!SlugHelper.IsValidSlug(post.Slug))
+        return Results.BadRequest("Slug must be in kebab-case (lowercase, hyphen-separated).");
+
+    var existing = postService.GetPostBySlug(post.Slug);
+    if (existing != null)
+        return Results.Conflict("Slug already exists.");
 
     post.Author = user.Username;
     post.PublishedDate = DateTime.UtcNow;
@@ -193,15 +181,13 @@ app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] (BlogPost post, HttpCo
 
     postService.SavePost(post);
 
-    
     if (post.Status == "published")
-        rssService.GenerateRssFeed();
+        rssService.GenerateRssFeed();
 
     return Results.Created($"/api/posts/{post.Slug}", post);
 });
 
-
-app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string slug, BlogPost updatedPost, HttpContext context, [FromServices]PostService postService) =>
+app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string slug, BlogPost updatedPost, HttpContext context, [FromServices]PostService postService, [FromServices]RssService rssService) =>
 {
     var user = context.Items["User"] as User;
     if (user == null) return Results.Unauthorized();
@@ -214,6 +200,17 @@ app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string s
 
     if (!isOwner && !isEditor)
         return Results.Forbid();
+
+
+    if (updatedPost.Slug != slug)
+    {
+        if (!SlugHelper.IsValidSlug(updatedPost.Slug))
+            return Results.BadRequest("Slug must be in kebab-case (lowercase, hyphen-separated).");
+
+        var slugExists = postService.GetPostBySlug(updatedPost.Slug);
+        if (slugExists != null)
+            return Results.Conflict("Slug already exists.");
+    }
 
     updatedPost.Author = existing.Author;
     updatedPost.PublishedDate = existing.PublishedDate;
@@ -228,7 +225,6 @@ app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string s
     return Results.Ok(updatedPost);
 });
 
-
 app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] (string slug, [FromServices]PostService postService) =>
 {
     var post = postService.GetPostBySlug(slug);
@@ -240,10 +236,5 @@ app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] (string slug, [FromS
 
     return Results.Ok($"Deleted post: {slug}");
 });
-
-
-
-
-
 
 app.Run();

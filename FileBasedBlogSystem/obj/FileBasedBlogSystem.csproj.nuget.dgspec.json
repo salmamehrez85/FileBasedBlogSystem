@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj": {}
+    "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj": {
+    "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+        "projectUniqueName": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
         "projectName": "FileBasedBlogSystem",
-        "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+        "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
         "packagesPath": "C:\\Users\\salma\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\obj\\",
+        "outputPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

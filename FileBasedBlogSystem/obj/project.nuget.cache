@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lTXRURIm0F0=",
+  "dgSpecHash": "dQYZwcMycMg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+  "projectFilePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\salma\\.nuget\\packages\\markdig\\0.41.1\\markdig.0.41.1.nupkg.sha512",
     "C:\\Users\\salma\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\9.0.5\\microsoft.aspnetcore.authentication.jwtbearer.9.0.5.nupkg.sha512",
@@ -20,9 +20,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'SixLabors.ImageSharp' 3.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8",
-      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "libraryId": "SixLabors.ImageSharp",
       "targetGraphs": [
         "net9.0"
@@ -32,9 +32,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'SixLabors.ImageSharp' 3.0.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-5x7m-6737-26cr",
-      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "libraryId": "SixLabors.ImageSharp",
       "targetGraphs": [
         "net9.0"
@@ -44,9 +44,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'SixLabors.ImageSharp' 3.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-63p8-c4ww-9cg7",
-      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "libraryId": "SixLabors.ImageSharp",
       "targetGraphs": [
         "net9.0"
@@ -56,9 +56,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'SixLabors.ImageSharp' 3.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-65x7-c272-7g7r",
-      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "libraryId": "SixLabors.ImageSharp",
       "targetGraphs": [
         "net9.0"
@@ -68,9 +68,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'SixLabors.ImageSharp' 3.0.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-g85r-6x2q-45w7",
-      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "libraryId": "SixLabors.ImageSharp",
       "targetGraphs": [
         "net9.0"
@@ -80,9 +80,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'SixLabors.ImageSharp' 3.0.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qxrv-gp6x-rc23",
-      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "projectPath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
+      "filePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
       "libraryId": "SixLabors.ImageSharp",
       "targetGraphs": [
         "net9.0"

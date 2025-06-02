@@ -27,7 +27,7 @@ public class JwtMiddleware
                 }
             }
         }
-     
+
 
         await _next(context);
     }

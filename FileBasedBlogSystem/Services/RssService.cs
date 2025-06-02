@@ -46,11 +46,11 @@ public class RssService
             writer.WriteElementString("link", $"https://localhost:5030/posts/{post.Slug}");
             writer.WriteElementString("description", post.Description);
             writer.WriteElementString("pubDate", post.PublishedDate.ToString("R"));
-            writer.WriteEndElement(); 
+            writer.WriteEndElement();
         }
 
-        writer.WriteEndElement(); 
-        writer.WriteEndElement(); 
+        writer.WriteEndElement();
+        writer.WriteEndElement();
         writer.WriteEndDocument();
     }
 }

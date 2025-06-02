@@ -38,11 +38,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
     options.AddPolicy("AuthorOrEditor", policy => policy.RequireRole("Author", "Editor"));
 });
+
 
 var app = builder.Build();
 
@@ -60,7 +62,7 @@ if (adminUser == null)
     userService.SaveUser(adminUser);
 }
 
-app.UseRouting(); 
+app.UseRouting();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -70,7 +72,7 @@ app.MapGet("/", () => Results.Ok("Welcome to FileBlogSystem!"));
 
 app.MapGet("/api/secure-data", () =>
 {
-    return Results.Ok("This is protected data.");
+        return Results.Ok("This is protected data.");
 }).RequireAuthorization();
 
 app.MapPost("/login", (User loginUser, IConfiguration config) =>
@@ -85,6 +87,7 @@ app.MapPost("/login", (User loginUser, IConfiguration config) =>
     return Results.Unauthorized();
 });
 
+
 app.MapPost("/posts/{slug}/upload", async (
     HttpContext context,
     string slug,
@@ -92,6 +95,7 @@ app.MapPost("/posts/{slug}/upload", async (
     PostService postService,
     ImageService imageService) =>
 {
+
     var user = context.Items["User"] as User;
     if (user == null) return Results.Unauthorized();
 
@@ -108,17 +112,18 @@ app.MapPost("/posts/{slug}/upload", async (
     return Results.Ok("Image uploaded and resized.");
 }).RequireAuthorization().DisableAntiforgery();
 
+
 app.MapGet("/admin", () => Results.Ok("Admin area"))
    .RequireAuthorization("AdminOnly");
 
 app.MapGet("/editor", () => Results.Ok("Author or Editor area"))
    .RequireAuthorization("AuthorOrEditor");
 
-app.MapGet("/posts", (int? page, int? pageSize, [FromServices]PostService postService) =>
+app.MapGet("/posts", (int? page, int? pageSize, [FromServices] PostService postService) =>
 {
     var currentPage = page ?? 1;
     var currentPageSize = pageSize ?? 10;
-    
+
     var posts = postService.GetAllPosts()
         .Where(p => p.Status == "published")
         .OrderByDescending(p => p.PublishedDate)
@@ -129,29 +134,37 @@ app.MapGet("/posts", (int? page, int? pageSize, [FromServices]PostService postSe
 
 app.MapGet("/posts/{slug}", (string slug, [FromServices] PostService postService) =>
 {
+
     var post = postService.GetPostBySlug(slug);
     return post is not null ? Results.Ok(post) : Results.NotFound();
+
 });
 
-app.MapGet("/posts/category/{category}", (string category, [FromServices]PostService postService) =>
+app.MapGet("/posts/category/{category}", (string category, [FromServices] PostService postService) =>
 {
+
     var posts = postService.GetAllPosts()
         .Where(p => p.Status == "published" && p.Categories.Contains(category, StringComparer.OrdinalIgnoreCase))
         .OrderByDescending(p => p.PublishedDate);
 
     return Results.Ok(posts);
+
 });
 
-app.MapGet("/posts/tag/{tag}", (string tag, [FromServices]PostService postService) =>
+
+app.MapGet("/posts/tag/{tag}", (string tag, [FromServices] PostService postService) =>
 {
+
     var posts = postService.GetAllPosts()
         .Where(p => p.Status == "published" && p.Tags.Contains(tag, StringComparer.OrdinalIgnoreCase))
         .OrderByDescending(p => p.PublishedDate);
 
     return Results.Ok(posts);
+
 });
 
-app.MapGet("/posts/search", (string q, [FromServices]PostService postService) =>
+
+app.MapGet("/posts/search", (string q, [FromServices] PostService postService) =>
 {
     var posts = postService.GetAllPosts()
         .Where(p => p.Status == "published" &&
@@ -163,8 +176,10 @@ app.MapGet("/posts/search", (string q, [FromServices]PostService postService) =>
     return Results.Ok(posts);
 });
 
-app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] (BlogPost post, HttpContext context, [FromServices]PostService postService, [FromServices]RssService rssService) =>
+
+app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] (BlogPost post, HttpContext context, [FromServices] PostService postService, [FromServices] RssService rssService) =>
 {
+
     var user = context.Items["User"] as User;
     if (user == null) return Results.Unauthorized();
 
@@ -186,10 +201,13 @@ app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] (BlogPost post, HttpCo
         rssService.GenerateRssFeed();
 
     return Results.Created($"/api/posts/{post.Slug}", post);
+
 });
 
-app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string slug, BlogPost updatedPost, HttpContext context, [FromServices]PostService postService, [FromServices]RssService rssService) =>
+
+app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string slug, BlogPost updatedPost, HttpContext context, [FromServices] PostService postService, [FromServices] RssService rssService) =>
 {
+
     var user = context.Items["User"] as User;
     if (user == null) return Results.Unauthorized();
 
@@ -201,7 +219,6 @@ app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string s
 
     if (!isOwner && !isEditor)
         return Results.Forbid();
-
 
     if (updatedPost.Slug != slug)
     {
@@ -224,10 +241,13 @@ app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string s
         rssService.GenerateRssFeed();
     }
     return Results.Ok(updatedPost);
+
 });
 
-app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] (string slug, [FromServices]PostService postService) =>
+
+app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] (string slug, [FromServices] PostService postService) =>
 {
+ 
     var post = postService.GetPostBySlug(slug);
     if (post == null) return Results.NotFound();
 
@@ -236,10 +256,13 @@ app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] (string slug, [FromS
         Directory.Delete(dir, true);
 
     return Results.Ok($"Deleted post: {slug}");
+
 });
+
 
 app.MapFallback((HttpContext context, PostService postService, ConfigService configService, MarkdownService markdownService) =>
 {
+
     var path = context.Request.Path.Value?.TrimEnd('/').ToLowerInvariant();
     if (string.IsNullOrEmpty(path)) return Results.NotFound();
 
@@ -256,6 +279,8 @@ app.MapFallback((HttpContext context, PostService postService, ConfigService con
     }
 
     return Results.NotFound();
+
 });
+
 
 app.Run();

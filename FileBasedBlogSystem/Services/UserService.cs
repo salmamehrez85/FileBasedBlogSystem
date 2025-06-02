@@ -28,21 +28,21 @@ public class UserService
         File.WriteAllText(userPath, JsonSerializer.Serialize(user, new JsonSerializerOptions { WriteIndented = true }));
     }
 
-    
-public bool ValidateUser(string username, string password)
-{
-    var user = GetUser(username);
-    if (user == null) return false;
 
-    var hash = ComputeHash(password);
-    return user.Password == hash;
-}
+    public bool ValidateUser(string username, string password)
+    {
+        var user = GetUser(username);
+        if (user == null) return false;
 
-public static string ComputeHash(string input)
-{
-    using var sha256 = SHA256.Create();
-    var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
-    return Convert.ToBase64String(bytes);
-}
+        var hash = ComputeHash(password);
+        return user.Password == hash;
+    }
+
+    public static string ComputeHash(string input)
+    {
+        using var sha256 = SHA256.Create();
+        var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+        return Convert.ToBase64String(bytes);
+    }
 
 }

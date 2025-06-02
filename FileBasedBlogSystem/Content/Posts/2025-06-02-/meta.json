@@ -1,0 +1,16 @@
+{
+  "Title": "Test Post",
+  "Description": "Test Description",
+  "Body": "Test Content",
+  "PublishedDate": "2025-06-02T15:44:35.7259834Z",
+  "ModifiedDate": "2025-06-02T15:44:35.7260618Z",
+  "Tags": [
+    "test"
+  ],
+  "Categories": [
+    "test"
+  ],
+  "Slug": "",
+  "Status": "draft",
+  "Author": "admin"
+}

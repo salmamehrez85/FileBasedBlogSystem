@@ -4,9 +4,14 @@ using System.Text;
 using FileBlogSystem.Utils;
 using FileBlogSystem.Models;
 using FileBlogSystem.Middleware;
+using FileBlogSystem.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<FileBlogSystem.Services.PostService>();
 
 
 
@@ -44,6 +49,22 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
+
+
+var userService = app.Services.GetRequiredService<UserService>();
+var adminUser = userService.GetUser("admin");
+if (adminUser == null)
+{
+    adminUser = new User
+    {
+        Username = "admin",
+        Password = UserService.ComputeHash("admin123"),
+        Email = "admin@example.com",
+        Roles = new List<string> { "Admin" }
+    };
+    userService.SaveUser(adminUser);
+}
+
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -70,10 +91,81 @@ app.MapPost("/login", (User loginUser, IConfiguration config) =>
     return Results.Unauthorized();
 });
 
-app.MapGet("/api/admin", () => Results.Ok("Admin area"))
+app.MapGet("/admin", () => Results.Ok("Admin area"))
    .RequireAuthorization("AdminOnly");
 
-app.MapGet("/api/editor", () => Results.Ok("Author or Editor area"))
+app.MapGet("/editor", () => Results.Ok("Author or Editor area"))
    .RequireAuthorization("AuthorOrEditor");
+
+
+
+app.MapGet("/posts", ([FromServices]PostService postService) =>
+{
+    var posts = postService.GetAllPosts()
+        .Where(p => p.Status == "published");
+    return Results.Ok(posts);
+});
+
+
+app.MapGet("/posts/{slug}", (string slug, [FromServices]PostService postService) =>
+{
+    var post = postService.GetPostBySlug(slug);
+    return post is not null ? Results.Ok(post) : Results.NotFound();
+});
+
+
+app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] (BlogPost post, HttpContext context, [FromServices]PostService postService) =>
+{
+    var user = context.Items["User"] as User;
+    if (user == null) return Results.Unauthorized();
+
+    post.Author = user.Username;
+    post.PublishedDate = DateTime.UtcNow;
+    post.ModifiedDate = DateTime.UtcNow;
+
+    postService.SavePost(post);
+    return Results.Created($"/api/posts/{post.Slug}", post);
+});
+
+
+app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string slug, BlogPost updatedPost, HttpContext context, [FromServices]PostService postService) =>
+{
+    var user = context.Items["User"] as User;
+    if (user == null) return Results.Unauthorized();
+
+    var existing = postService.GetPostBySlug(slug);
+    if (existing == null) return Results.NotFound();
+
+    var isOwner = existing.Author == user.Username;
+    var isEditor = user.Roles.Contains("Editor") || user.Roles.Contains("Admin");
+
+    if (!isOwner && !isEditor)
+        return Results.Forbid();
+
+    updatedPost.Author = existing.Author;
+    updatedPost.PublishedDate = existing.PublishedDate;
+    updatedPost.ModifiedDate = DateTime.UtcNow;
+
+    postService.SavePost(updatedPost);
+    return Results.Ok(updatedPost);
+});
+
+
+app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] (string slug, [FromServices]PostService postService) =>
+{
+    var post = postService.GetPostBySlug(slug);
+    if (post == null) return Results.NotFound();
+
+    var dir = Path.Combine("Content", "Posts", $"{post.PublishedDate:yyyy-MM-dd}-{post.Slug}");
+    if (Directory.Exists(dir))
+        Directory.Delete(dir, true);
+
+    return Results.Ok($"Deleted post: {slug}");
+});
+
+
+
+
+
 
 app.Run();

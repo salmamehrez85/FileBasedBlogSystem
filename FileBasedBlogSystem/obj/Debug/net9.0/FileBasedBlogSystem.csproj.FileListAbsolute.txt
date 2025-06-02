@@ -7,7 +7,6 @@ C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlog
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\appsettings.json
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\Config\routes.json
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\Config\site.json
-C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\Content\Posts\2025-06-02-post-slug\meta.json
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\FileBasedBlogSystem.staticwebassets.runtime.json
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\FileBasedBlogSystem.staticwebassets.endpoints.json
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\FileBasedBlogSystem.exe
@@ -36,3 +35,4 @@ C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlog
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\obj\Debug\net9.0\FileBasedBlogSystem.genruntimeconfig.cache
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\obj\Debug\net9.0\ref\FileBasedBlogSystem.dll
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\obj\Debug\net9.0\FileBasedBlogSystem.sourcelink.json
+C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\Content\Posts\2025-06-02-my-post\meta.json

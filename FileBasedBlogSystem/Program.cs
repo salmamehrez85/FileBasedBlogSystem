@@ -179,6 +179,8 @@ app.MapGet("/posts/search", (string q, [FromServices]PostService postService) =>
 });
 
 
+builder.Services.AddSingleton<RssService>();
+var rssService = app.Services.GetRequiredService<RssService>();
 
 app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] (BlogPost post, HttpContext context, [FromServices]PostService postService) =>
 {
@@ -190,6 +192,11 @@ app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] (BlogPost post, HttpCo
     post.ModifiedDate = DateTime.UtcNow;
 
     postService.SavePost(post);
+
+    
+    if (post.Status == "published")
+        rssService.GenerateRssFeed();
+
     return Results.Created($"/api/posts/{post.Slug}", post);
 });
 
@@ -213,6 +220,11 @@ app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string s
     updatedPost.ModifiedDate = DateTime.UtcNow;
 
     postService.SavePost(updatedPost);
+
+    if (updatedPost.Status == "published")
+    {
+        rssService.GenerateRssFeed();
+    }
     return Results.Ok(updatedPost);
 });
 

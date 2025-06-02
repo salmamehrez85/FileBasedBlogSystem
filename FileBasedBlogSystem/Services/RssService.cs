@@ -1,0 +1,56 @@
+using System.Text;
+using System.Xml;
+using FileBlogSystem.Models;
+
+namespace FileBlogSystem.Services;
+
+public class RssService
+{
+    private readonly PostService _postService;
+    private readonly IWebHostEnvironment _env;
+
+    public RssService(PostService postService, IWebHostEnvironment env)
+    {
+        _postService = postService;
+        _env = env;
+    }
+
+    public void GenerateRssFeed()
+    {
+        var posts = _postService.GetAllPosts()
+            .Where(p => p.Status == "published")
+            .OrderByDescending(p => p.PublishedDate)
+            .Take(20);
+
+        var rssPath = Path.Combine(_env.WebRootPath, "feeds");
+        Directory.CreateDirectory(rssPath);
+
+        var filePath = Path.Combine(rssPath, "rss.xml");
+
+        var settings = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
+        using var writer = XmlWriter.Create(filePath, settings);
+
+        writer.WriteStartDocument();
+        writer.WriteStartElement("rss");
+        writer.WriteAttributeString("version", "2.0");
+
+        writer.WriteStartElement("channel");
+        writer.WriteElementString("title", "FileBlogSystem RSS Feed");
+        writer.WriteElementString("link", "https://localhost:5030");
+        writer.WriteElementString("description", "Latest blog posts");
+
+        foreach (var post in posts)
+        {
+            writer.WriteStartElement("item");
+            writer.WriteElementString("title", post.Title);
+            writer.WriteElementString("link", $"https://localhost:5030/posts/{post.Slug}");
+            writer.WriteElementString("description", post.Description);
+            writer.WriteElementString("pubDate", post.PublishedDate.ToString("R"));
+            writer.WriteEndElement(); 
+        }
+
+        writer.WriteEndElement(); 
+        writer.WriteEndElement(); 
+        writer.WriteEndDocument();
+    }
+}

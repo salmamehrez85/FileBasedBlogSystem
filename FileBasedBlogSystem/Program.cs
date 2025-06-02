@@ -14,6 +14,7 @@ builder.Services.AddSingleton<FileBlogSystem.Services.PostService>();
 builder.Services.AddSingleton<ImageService>();
 builder.Services.AddSingleton<RssService>();
 builder.Services.AddSingleton<ConfigService>();
+builder.Services.AddSingleton<MarkdownService>();
 builder.Services.AddSingleton<FileBlogSystem.Services.UserService>();
 
 var jwtSecretKey = builder.Configuration["Jwt:Key"] ?? "a1b2c3d4e5f67890123456789abcdef0fedcba9876543210abcdef1234567890";
@@ -126,11 +127,20 @@ app.MapGet("/posts", (int? page, int? pageSize, [FromServices]PostService postSe
     return Results.Ok(posts);
 });
 
-app.MapGet("/posts/{slug}", (string slug, [FromServices] PostService postService) =>
+
+
+app.MapGet("/posts/{slug}", (string slug, [FromServices] PostService postService, MarkdownService markdownService) =>
 {
+  
     var post = postService.GetPostBySlug(slug);
-    return post is not null ? Results.Ok(post) : Results.NotFound();
+    if (post == null) return Results.NotFound();
+
+    var html = markdownService.ConvertToHtml(post.Body);
+    return Results.Ok(new { html });
+
 });
+
+
 
 app.MapGet("/posts/category/{category}", (string category, [FromServices]PostService postService) =>
 {
@@ -225,7 +235,7 @@ app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string s
     return Results.Ok(updatedPost);
 });
 
-app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] (string slug, [FromServices]PostService postService) =>
+app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] (string slug, [FromServices] PostService postService) =>
 {
     var post = postService.GetPostBySlug(slug);
     if (post == null) return Results.NotFound();
@@ -236,5 +246,26 @@ app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] (string slug, [FromS
 
     return Results.Ok($"Deleted post: {slug}");
 });
+
+app.MapFallback( (HttpContext context, PostService postService, ConfigService configService, MarkdownService markdownService) =>
+{
+    var path = context.Request.Path.Value?.TrimEnd('/').ToLowerInvariant();
+    if (string.IsNullOrEmpty(path)) return Results.NotFound();
+
+    var routes = configService.GetCustomRoutes();
+
+    if (routes.TryGetValue(path, out var slug))
+    {
+        var post = postService.GetPostBySlug(slug);
+        if (post == null || post.Status != "published")
+            return Results.NotFound();
+
+        var html = markdownService.ConvertToHtml(post.Body);
+        return Results.Content(html, "text/html");
+    }
+
+    return Results.NotFound();
+});
+
 
 app.Run();

@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "By0sB/gJI10=",
+  "dgSpecHash": "lTXRURIm0F0=",
   "success": true,
   "projectFilePath": "C:\\Users\\salma\\OneDrive\\Desktop\\Salma's CV & Certificates\\Projects\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem\\FileBasedBlogSystem.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\salma\\.nuget\\packages\\markdig\\0.41.1\\markdig.0.41.1.nupkg.sha512",
     "C:\\Users\\salma\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\9.0.5\\microsoft.aspnetcore.authentication.jwtbearer.9.0.5.nupkg.sha512",
     "C:\\Users\\salma\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.0.1\\microsoft.identitymodel.abstractions.8.0.1.nupkg.sha512",
     "C:\\Users\\salma\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.0.1\\microsoft.identitymodel.jsonwebtokens.8.0.1.nupkg.sha512",

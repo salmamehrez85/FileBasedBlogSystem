@@ -41,3 +41,4 @@ C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlog
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\SixLabors.ImageSharp.dll
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\Content\Categories\technology.json
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\Content\Tags\coding.json
+C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\Markdig.dll

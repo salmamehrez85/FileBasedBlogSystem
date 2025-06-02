@@ -1,4 +1,4 @@
-using FileBlogSystem.Models;
+using FileBlogSystem.Features;
 using System.Text.Json;
 
 namespace FileBlogSystem.Services;

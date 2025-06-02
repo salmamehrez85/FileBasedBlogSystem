@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using FileBlogSystem.Utils;
-using FileBlogSystem.Models;
+using FileBlogSystem.Features;
 using FileBlogSystem.Middleware;
 using FileBlogSystem.Services;
 using Microsoft.AspNetCore.Authorization;

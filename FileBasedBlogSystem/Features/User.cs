@@ -1,4 +1,4 @@
-namespace FileBlogSystem.Models;
+namespace FileBlogSystem.Features;
 
 public class User
 {

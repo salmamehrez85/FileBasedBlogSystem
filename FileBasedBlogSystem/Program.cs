@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<FileBlogSystem.Services.PostService>();
+builder.Services.AddSingleton<ImageService>();
+
 
 
 
@@ -49,8 +51,6 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-
-
 var userService = app.Services.GetRequiredService<UserService>();
 var adminUser = userService.GetUser("admin");
 if (adminUser == null)
@@ -65,11 +65,12 @@ if (adminUser == null)
     userService.SaveUser(adminUser);
 }
 
+app.UseRouting(); 
+
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<JwtMiddleware>();
-
 
 
 app.MapGet("/", () => Results.Ok("Welcome to FileBlogSystem!"));
@@ -90,6 +91,31 @@ app.MapPost("/login", (User loginUser, IConfiguration config) =>
 
     return Results.Unauthorized();
 });
+
+ app.MapPost("/posts/{slug}/upload", async (
+     HttpContext context,
+     string slug,
+     IFormFile file,
+     PostService postService,
+     ImageService imageService) =>
+ {
+     var user = context.Items["User"] as User;
+     if (user == null) return Results.Unauthorized();
+
+     var post = postService.GetPostBySlug(slug);
+     if (post == null) return Results.NotFound("Post not found.");
+
+     if (file == null || file.Length == 0)
+         return Results.BadRequest("No file was uploaded.");
+
+     var postDir = Path.Combine("Content", "Posts", $"{post.PublishedDate:yyyy-MM-dd}-{post.Slug}", "assets");
+     Directory.CreateDirectory(postDir);
+     await imageService.SaveAndResizeImageAsync(file, postDir);
+
+     return Results.Ok("Image uploaded and resized.");
+ }).RequireAuthorization().DisableAntiforgery();
+ 
+
 
 app.MapGet("/admin", () => Results.Ok("Admin area"))
    .RequireAuthorization("AdminOnly");

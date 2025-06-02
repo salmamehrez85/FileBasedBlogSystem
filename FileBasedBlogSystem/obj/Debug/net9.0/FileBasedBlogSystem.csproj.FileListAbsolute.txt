@@ -36,3 +36,6 @@ C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlog
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\obj\Debug\net9.0\ref\FileBasedBlogSystem.dll
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\obj\Debug\net9.0\FileBasedBlogSystem.sourcelink.json
 C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\Content\Posts\2025-06-02-my-post\meta.json
+C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\Content\Posts\2025-06-02-\meta.json
+C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\Content\Users\admin\profile.json
+C:\Users\salma\OneDrive\Desktop\Salma's CV & Certificates\Projects\FileBasedBlogSystem\FileBasedBlogSystem\FileBasedBlogSystem\bin\Debug\net9.0\SixLabors.ImageSharp.dll

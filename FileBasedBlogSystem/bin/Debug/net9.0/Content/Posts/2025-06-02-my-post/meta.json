@@ -1,7 +1,12 @@
 {
-  "Slug": "my-post",
-  "Title": "My Post Title",
+  "Title": "My New Post Title",
+  "Description": "",
   "Body": "Markdown content here",
+  "PublishedDate": "2025-06-02T15:45:09.1861381Z",
+  "ModifiedDate": "2025-06-02T15:46:30.2723576Z",
+  "Tags": [],
+  "Categories": [],
+  "Slug": "my-post",
   "Status": "published",
-  "PublishedDate": "2025-06-02"
+  "Author": "admin"
 }

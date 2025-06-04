@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
 
-namespace FileBlogSystem.Utils;
+namespace FileBlogSystem.Services;
 
-public static class SlugHelper
+public static class SlugService
 {
     public static bool IsValidSlug(string slug)
     {
@@ -17,4 +17,4 @@ public static class SlugHelper
         slug = Regex.Replace(slug, @"-+", "-");
         return slug.Trim('-');
     }
-}
+} 

@@ -13,3 +13,4 @@ public class BlogPost
     public string Status { get; set; } = "draft";
     public string Author { get; set; } = string.Empty;
 }
+

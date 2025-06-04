@@ -56,4 +56,18 @@ public class PostService
         File.WriteAllText(metaPath, JsonSerializer.Serialize(post, new JsonSerializerOptions { WriteIndented = true }));
         File.WriteAllText(contentPath, post.Body);
     }
+
+    public void DeletePost(string slug)
+    {
+        var post = GetPostBySlug(slug);
+        if (post == null) return;
+
+        var dirName = $"{post.PublishedDate:yyyy-MM-dd}-{post.Slug}";
+        var postDir = Path.Combine(_postsRoot, dirName);
+
+        if (Directory.Exists(postDir))
+        {
+            Directory.Delete(postDir, true);
+        }
+    }
 }

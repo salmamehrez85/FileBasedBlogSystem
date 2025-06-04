@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>FileBlogSystem RSS Feed</title>
+    <link>https://localhost:5030</link>
+    <description>Latest blog posts</description>
+    <item>
+      <title>My Second Blog Post</title>
+      <link>https://localhost:5030/posts/my-second-post</link>
+      <description>This is my second blog post</description>
+      <pubDate>Wed, 04 Jun 2025 23:00:34 GMT</pubDate>
+    </item>
+    <item>
+      <title>My First Blog Post</title>
+      <link>https://localhost:5030/posts/my-first-post</link>
+      <description>This is a blog post</description>
+      <pubDate>Wed, 04 Jun 2025 22:53:48 GMT</pubDate>
+    </item>
+    <item>
+      <title />
+      <link>https://localhost:5030/posts/my-new-post</link>
+      <description />
+      <pubDate>Mon, 02 Jun 2025 15:45:09 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

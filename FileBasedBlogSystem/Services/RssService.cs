@@ -20,9 +20,10 @@ public class RssService
         var posts = _postService.GetAllPosts()
             .Where(p => p.Status == "published")
             .OrderByDescending(p => p.PublishedDate)
-            .Take(20);
+            .Take(5);
 
-        var rssPath = Path.Combine(_env.WebRootPath, "feeds");
+        var webRootPath = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        var rssPath = Path.Combine(webRootPath, "feeds");
         Directory.CreateDirectory(rssPath);
 
         var filePath = Path.Combine(rssPath, "rss.xml");

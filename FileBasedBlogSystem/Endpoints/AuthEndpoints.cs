@@ -1,0 +1,33 @@
+using Microsoft.AspNetCore.Mvc;
+using FileBlogSystem.Services;
+using FileBlogSystem.Features;
+
+namespace FileBlogSystem.Endpoints;
+
+public static class AuthEndpoints
+{
+    public static void MapAuthEndpoints(this WebApplication app)
+    {
+        app.MapPost("/login", (User loginUser, [FromServices] JwtTokenService jwtService) =>
+        {
+            if (loginUser.Username == "admin" && loginUser.Password == "admin123")
+            {
+                var roles = new List<string> { "Admin" };
+                var token = jwtService.GenerateToken(loginUser.Username, roles);
+                return Results.Ok(new { token });
+            }
+            return Results.Unauthorized();
+        });
+
+        app.MapGet("/secure-data", () =>
+        {
+            return Results.Ok("This is protected data.");
+        }).RequireAuthorization();
+
+        app.MapGet("/admin", () => Results.Ok("Admin area"))
+           .RequireAuthorization("AdminOnly");
+
+        app.MapGet("/editor", () => Results.Ok("Author or Editor area"))
+           .RequireAuthorization("AuthorOrEditor");
+    }
+}

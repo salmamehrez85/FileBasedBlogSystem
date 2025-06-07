@@ -1,77 +1,98 @@
 const POSTS_PER_PAGE = 2;
 let currentPage = 1;
 let tag = "";
+let allPosts = [];
 
 const postsContainer = document.getElementById("postsContainer");
 const paginationContainer = document.getElementById("pagination");
 const tagTitle = document.getElementById("tagTitle");
+const searchInput = document.getElementById("searchInput");
+const searchButton = document.getElementById("searchButton");
 
-function getTagFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("tag");
+function setupSearchEvents() {
+  searchButton.addEventListener("click", handleSearch);
+  searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") handleSearch();
+  });
 }
 
-async function fetchTagPosts() {
+function handleSearch() {
+  const enteredTag = searchInput.value.trim().toLowerCase();
+  if (!enteredTag) return;
+
+  tag = enteredTag;
+  currentPage = 1;
+  tagTitle.textContent = `Tag: ${tag}`;
+  fetchAndRenderTagPosts();
+}
+
+async function fetchAndRenderTagPosts() {
   try {
     const response = await fetch(`/posts/tag/${encodeURIComponent(tag)}`);
-    if (!response.ok) throw new Error("Failed to fetch tag posts");
+    if (!response.ok) throw new Error("Failed to fetch posts");
 
     const data = await response.json();
-    const totalPosts = data.length;
-    const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
-    const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-    const paginatedPosts = data.slice(startIndex, startIndex + POSTS_PER_PAGE);
+    allPosts = Array.isArray(data) ? data : [];
 
-    return {
-      posts: paginatedPosts,
-      totalPages,
-    };
+    renderPage(currentPage);
   } catch (err) {
     console.error(err);
-    postsContainer.innerHTML = `<div class="error-message">Error loading posts</div>`;
-    return { posts: [], totalPages: 0 };
+    postsContainer.innerHTML = `<p>Error loading posts.</p>`;
+    paginationContainer.innerHTML = "";
   }
+}
+
+function renderPage(page) {
+  const totalPosts = allPosts.length;
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+  currentPage = Math.min(page, totalPages);
+
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const paginatedPosts = allPosts.slice(
+    startIndex,
+    startIndex + POSTS_PER_PAGE
+  );
+
+  displayPosts(paginatedPosts);
+  displayPagination(totalPages);
 }
 
 function displayPosts(posts) {
-  if (!posts.length) {
-    postsContainer.innerHTML = `<p>No posts under this tag.</p>`;
-    return;
-  }
-
-  postsContainer.innerHTML = posts
-    .map(
-      (post) => `
-      <article class="post-card">
-        <div class="post-content">
-          <h2 class="post-title">
-            <a href="/posts/${
-              post.slug
-            }" style="text-decoration: none; color: inherit;">
-              ${post.title || "Untitled"}
-            </a>
-          </h2>
-          <p class="post-excerpt">${
-            post.description || "No description available"
-          }</p>
-          <div class="post-meta">
-            <span class="post-date">
-              <i class="fas fa-calendar"></i>
-              ${
-                post.publishedDate
-                  ? new Date(post.publishedDate).toLocaleDateString()
-                  : "No date"
-              }
-            </span>
-            <div class="post-author">
-              <i class="fas fa-user"></i> By ${post.author || "Unknown"}
+  postsContainer.innerHTML = posts.length
+    ? posts
+        .map(
+          (post) => `
+        <article class="post-card">
+          <div class="post-content">
+            <h2 class="post-title">
+              <a href="/posts/${
+                post.slug
+              }" style="text-decoration: none; color: inherit;">
+                ${post.title || "Untitled"}
+              </a>
+            </h2>
+            <p class="post-excerpt">${
+              post.description || "No description available"
+            }</p>
+            <div class="post-meta">
+              <span class="post-date">
+                <i class="fas fa-calendar"></i>
+                ${
+                  post.publishedDate
+                    ? new Date(post.publishedDate).toLocaleDateString()
+                    : "No date"
+                }
+              </span>
+              <div class="post-author">
+                <i class="fas fa-user"></i> By ${post.author || "Unknown"}
+              </div>
             </div>
           </div>
-        </div>
-      </article>
-    `
-    )
-    .join("");
+        </article>
+      `
+        )
+        .join("")
+    : `<p>No posts found for tag "${tag}".</p>`;
 }
 
 function displayPagination(totalPages) {
@@ -80,14 +101,13 @@ function displayPagination(totalPages) {
     return;
   }
 
-  const pages = [];
+  const buttons = [];
 
-  pages.push(`
-    <button 
-      class="pagination-btn"
-      onclick="changePage(${Math.max(currentPage - 1, 1)})"
-      ${currentPage === 1 ? "disabled" : ""}
-    >Prev</button>
+  buttons.push(`
+    <button class="pagination-btn" onclick="goToPage(${currentPage - 1})"
+      ${currentPage === 1 ? "disabled" : ""}>
+      Prev
+    </button>
   `);
 
   for (let i = 1; i <= totalPages; i++) {
@@ -96,47 +116,38 @@ function displayPagination(totalPages) {
       i === totalPages ||
       (i >= currentPage - 1 && i <= currentPage + 1)
     ) {
-      pages.push(`
-        <button 
-          class="pagination-btn ${i === currentPage ? "active" : ""}"
-          onclick="changePage(${i})"
-        >${i}</button>
+      buttons.push(`
+        <button class="pagination-btn ${
+          i === currentPage ? "active" : ""
+        }" onclick="goToPage(${i})">${i}</button>
       `);
     } else if (i === currentPage - 2 || i === currentPage + 2) {
-      pages.push(`<span class="pagination-ellipsis">...</span>`);
+      buttons.push('<span class="pagination-ellipsis">...</span>');
     }
   }
 
-  pages.push(`
-    <button 
-      class="pagination-btn"
-      onclick="changePage(${Math.min(currentPage + 1, totalPages)})"
-      ${currentPage === totalPages ? "disabled" : ""}
-    >Next</button>
+  buttons.push(`
+    <button class="pagination-btn" onclick="goToPage(${currentPage + 1})"
+      ${currentPage === totalPages ? "disabled" : ""}>
+      Next
+    </button>
   `);
 
-  paginationContainer.innerHTML = pages.join("");
+  paginationContainer.innerHTML = buttons.join("");
 }
 
-function changePage(page) {
-  if (page < 1) return;
-  currentPage = page;
-  loadTagPosts();
-}
-
-async function loadTagPosts() {
-  const { posts, totalPages } = await fetchTagPosts();
-  displayPosts(posts);
-  displayPagination(totalPages);
+function goToPage(page) {
+  renderPage(page);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  tag = getTagFromUrl();
-  if (!tag) {
-    postsContainer.innerHTML = `<p>No tag specified.</p>`;
-    return;
-  }
+  setupSearchEvents();
 
-  tagTitle.textContent = `Tag: ${tag}`;
-  loadTagPosts();
+  const defaultTag = new URLSearchParams(window.location.search).get("tag");
+  if (defaultTag) {
+    searchInput.value = defaultTag;
+    tag = defaultTag.toLowerCase();
+    tagTitle.textContent = `Tag: ${tag}`;
+    fetchAndRenderTagPosts();
+  }
 });

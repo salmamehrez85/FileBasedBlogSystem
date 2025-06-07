@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using FileBlogSystem.Services;
 using FileBlogSystem.Features;
+
 namespace FileBlogSystem.Endpoints;
 
 public static class PostEndpoints
@@ -13,12 +14,28 @@ public static class PostEndpoints
             var currentPage = page ?? 1;
             var currentPageSize = pageSize ?? 10;
 
-            var posts = postService.GetAllPosts()
+            var allPosts = postService.GetAllPosts()
                 .Where(p => p.Status == "published")
-                .OrderByDescending(p => p.PublishedDate)
+                .OrderByDescending(p => p.PublishedDate);
+
+            var totalPosts = allPosts.Count();
+            var totalPages = (int)Math.Ceiling((double)totalPosts / currentPageSize);
+
+            var posts = allPosts
                 .Skip((currentPage - 1) * currentPageSize)
-                .Take(currentPageSize);
-            return Results.Ok(posts);
+                .Take(currentPageSize)
+                .ToList();
+
+            return Results.Ok(new
+            {
+                Posts = posts,
+                CurrentPage = currentPage,
+                PageSize = currentPageSize,
+                TotalPosts = totalPosts,
+                TotalPages = totalPages,
+                HasNextPage = currentPage < totalPages,
+                HasPreviousPage = currentPage > 1
+            });
         });
 
         app.MapGet("/posts/{slug}", (string slug, [FromServices] PostService postService) =>
@@ -31,7 +48,8 @@ public static class PostEndpoints
         {
             var posts = postService.GetAllPosts()
                 .Where(p => p.Status == "published" && p.Categories.Contains(category, StringComparer.OrdinalIgnoreCase))
-                .OrderByDescending(p => p.PublishedDate);
+                .OrderByDescending(p => p.PublishedDate)
+                .ToList();
             return Results.Ok(posts);
         });
 
@@ -39,7 +57,8 @@ public static class PostEndpoints
         {
             var posts = postService.GetAllPosts()
                 .Where(p => p.Status == "published" && p.Tags.Contains(tag, StringComparer.OrdinalIgnoreCase))
-                .OrderByDescending(p => p.PublishedDate);
+                .OrderByDescending(p => p.PublishedDate)
+                .ToList();
             return Results.Ok(posts);
         });
 
@@ -50,7 +69,8 @@ public static class PostEndpoints
                     (p.Title.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                      p.Description.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                      p.Body.Contains(q, StringComparison.OrdinalIgnoreCase)))
-                .OrderByDescending(p => p.PublishedDate);
+                .OrderByDescending(p => p.PublishedDate)
+                .ToList();
             return Results.Ok(posts);
         });
 
@@ -75,7 +95,7 @@ public static class PostEndpoints
             if (post.Status == "published")
                 rssService.GenerateRssFeed();
 
-            return Results.Created($"/api/posts/{post.Slug}", post);
+            return Results.Created($"/posts/{post.Slug}", post);
         });
 
         app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string slug, BlogPost updatedPost, HttpContext context, [FromServices] PostService postService, [FromServices] RssService rssService) =>
@@ -124,4 +144,4 @@ public static class PostEndpoints
             return Results.NoContent();
         });
     }
-} 
+}

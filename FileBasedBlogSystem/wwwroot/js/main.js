@@ -182,3 +182,11 @@ function displayPosts(posts) {
     )
     .join("");
 }
+
+function handleSearch() {
+  searchQuery = searchInput.value.trim();
+  currentPage = 1;
+  currentCategory = null;
+  currentTag = null;
+  loadPosts();
+}

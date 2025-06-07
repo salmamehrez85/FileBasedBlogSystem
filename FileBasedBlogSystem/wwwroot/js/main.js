@@ -10,7 +10,6 @@ const searchInput = document.getElementById("searchInput");
 const searchButton = document.getElementById("searchButton");
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM loaded, initializing...");
   loadPosts();
   setupEventListeners();
 });
@@ -28,10 +27,6 @@ function setupEventListeners() {
 async function fetchPosts() {
   try {
     let url;
-    let queryParams = new URLSearchParams({
-      page: currentPage,
-      pageSize: POSTS_PER_PAGE,
-    });
 
     if (searchQuery) {
       url = `/posts/search?q=${encodeURIComponent(searchQuery)}`;
@@ -40,7 +35,7 @@ async function fetchPosts() {
     } else if (currentTag) {
       url = `/posts/tag/${encodeURIComponent(currentTag)}`;
     } else {
-      url = `/posts?${queryParams}`;
+      url = `/posts`;
     }
 
     console.log("Fetching from URL:", url);
@@ -55,20 +50,24 @@ async function fetchPosts() {
     const data = await response.json();
     console.log("Received data:", data);
 
-    if (Array.isArray(data)) {
-      const posts = data;
-      const totalPosts = posts.length;
-      const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
-      const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-      const endIndex = startIndex + POSTS_PER_PAGE;
-      const paginatedPosts = posts.slice(startIndex, endIndex);
+    let allPosts = [];
+    let totalPosts = 0;
 
-      return {
-        posts: paginatedPosts,
-        totalPages: totalPages,
-        totalPosts: totalPosts,
-      };
+    if (Array.isArray(data)) {
+      allPosts = data;
+      totalPosts = data.length;
     }
+
+    const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+    const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+    const endIndex = startIndex + POSTS_PER_PAGE;
+    const paginatedPosts = allPosts.slice(startIndex, endIndex);
+
+    return {
+      posts: paginatedPosts,
+      totalPages: totalPages,
+      totalPosts: totalPosts,
+    };
   } catch (error) {
     console.error("Error fetching posts:", error);
 
@@ -80,19 +79,26 @@ async function fetchPosts() {
       </div>
     `;
 
-    return { posts: [], totalPages: 0 };
+    return { posts: [], totalPages: 0, totalPosts: 0 };
   }
 }
 
 async function loadPosts() {
-  console.log("Loading posts...");
+  console.log("Loading posts for page:", currentPage);
 
-  const { posts, totalPages } = await fetchPosts();
+  const { posts, totalPages, totalPosts } = await fetchPosts();
+
+  console.log("Load posts result:", {
+    postsCount: posts?.length,
+    totalPages,
+    totalPosts,
+    currentPage,
+  });
 
   if (posts && posts.length > 0) {
     displayPosts(posts);
     displayPagination(totalPages);
-  } else {
+  } else if (totalPosts === 0) {
     postsContainer.innerHTML = `
       <div class="no-posts">
         <h3>No posts found</h3>
@@ -104,18 +110,25 @@ async function loadPosts() {
         }
       </div>
     `;
+    paginationContainer.innerHTML = "";
+  } else {
+    if (currentPage > 1) {
+      currentPage = 1;
+      loadPosts();
+      return;
+    }
+    displayPagination(totalPages);
   }
 }
 
-// Display posts in the container
 function displayPosts(posts) {
   console.log("Displaying posts:", posts.length);
 
   if (!posts || posts.length === 0) {
     postsContainer.innerHTML = `
       <div class="no-posts">
-        <h3>No posts found</h3>
-        <p>No posts match your current filters.</p>
+        <h3>No posts found for this page</h3>
+        <p>Try going to a different page or clearing your filters.</p>
       </div>
     `;
     return;
@@ -133,20 +146,22 @@ function displayPosts(posts) {
             <div class="post-content">
                 <h2 class="post-title">
                   <a href="/posts/${
-                    post.slug
+                    post.slug || post.id
                   }" style="text-decoration: none; color: inherit;">
                     ${post.title || "Untitled"}
                   </a>
                 </h2>
                 <p class="post-excerpt">${
-                  post.description || "No description available"
+                  post.description || post.excerpt || "No description available"
                 }</p>
                 <div class="post-meta">
                     <span class="post-date">
                       <i class="fas fa-calendar"></i>
                       ${
-                        post.publishedDate
-                          ? new Date(post.publishedDate).toLocaleDateString()
+                        post.publishedDate || post.createdAt
+                          ? new Date(
+                              post.publishedDate || post.createdAt
+                            ).toLocaleDateString()
                           : "No date"
                       }
                     </span>
@@ -154,7 +169,16 @@ function displayPosts(posts) {
                       post.categories && post.categories.length > 0
                         ? `<span class="post-category">
                             <i class="fas fa-folder"></i>
-                            ${post.categories[0]}
+                            ${
+                              Array.isArray(post.categories)
+                                ? post.categories[0]
+                                : post.categories
+                            }
+                          </span>`
+                        : post.category
+                        ? `<span class="post-category">
+                            <i class="fas fa-folder"></i>
+                            ${post.category}
                           </span>`
                         : ""
                     }
@@ -183,10 +207,122 @@ function displayPosts(posts) {
     .join("");
 }
 
+function displayPagination(totalPages) {
+  console.log("displayPagination called with:", { totalPages, currentPage });
+
+  if (totalPages <= 1) {
+    console.log("Only 1 or fewer pages, hiding pagination");
+    paginationContainer.innerHTML = "";
+    return;
+  }
+
+  let paginationHTML = '<div class="pagination-controls">';
+
+  // Previous button
+  if (currentPage > 1) {
+    paginationHTML += `
+      <button class="pagination-btn prev-btn" onclick="goToPage(${
+        currentPage - 1
+      })">
+        <i class="fas fa-chevron-left"></i> Previous
+      </button>
+    `;
+  } else {
+    paginationHTML += `
+      <button class="pagination-btn prev-btn disabled" disabled>
+        <i class="fas fa-chevron-left"></i> Previous
+      </button>
+    `;
+  }
+
+  paginationHTML += '<div class="page-numbers">';
+
+  const maxVisiblePages = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+  let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+  // First page and ellipsis
+  if (startPage > 1) {
+    paginationHTML += `<button class="pagination-btn page-btn" onclick="goToPage(1)">1</button>`;
+    if (startPage > 2) {
+      paginationHTML += '<span class="pagination-ellipsis">...</span>';
+    }
+  }
+
+  // Page numbers
+  for (let i = startPage; i <= endPage; i++) {
+    paginationHTML += `
+      <button class="pagination-btn page-btn ${
+        i === currentPage ? "active" : ""
+      }" 
+              onclick="goToPage(${i})">
+        ${i}
+      </button>
+    `;
+  }
+
+  // Last page and ellipsis
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      paginationHTML += '<span class="pagination-ellipsis">...</span>';
+    }
+    paginationHTML += `<button class="pagination-btn page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+  }
+
+  paginationHTML += "</div>";
+
+  // Next button
+  if (currentPage < totalPages) {
+    paginationHTML += `
+      <button class="pagination-btn next-btn" onclick="goToPage(${
+        currentPage + 1
+      })">
+        Next <i class="fas fa-chevron-right"></i>
+      </button>
+    `;
+  } else {
+    paginationHTML += `
+      <button class="pagination-btn next-btn disabled" disabled>
+        Next <i class="fas fa-chevron-right"></i>
+      </button>
+    `;
+  }
+
+  paginationHTML += "</div>";
+
+  paginationHTML += `
+    <div class="pagination-info">
+      Page ${currentPage} of ${totalPages}
+    </div>
+  `;
+
+  console.log("Setting pagination HTML for", totalPages, "pages");
+  paginationContainer.innerHTML = paginationHTML;
+}
+
+function goToPage(page) {
+  console.log("goToPage called with:", page);
+  if (page < 1) return;
+
+  currentPage = page;
+  loadPosts();
+
+  postsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function handleSearch() {
   searchQuery = searchInput.value.trim();
   currentPage = 1;
   currentCategory = null;
   currentTag = null;
+  loadPosts();
+}
+
+function clearFilters() {
+  currentPage = 1;
+  currentCategory = null;
+  currentTag = null;
+  searchQuery = "";
+  searchInput.value = "";
   loadPosts();
 }

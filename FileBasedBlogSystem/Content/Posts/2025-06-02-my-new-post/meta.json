@@ -1,12 +1,12 @@
 {
-  "Title": "",
-  "Description": "",
-  "Body": "",
+  "Title": "My Updated Post",
+  "Description": "This is an updated post",
+  "Body": "This is my updated post body",
   "PublishedDate": "2025-06-02T15:45:09.1861381Z",
-  "ModifiedDate": "2025-06-04T21:03:03.1179891Z",
+  "ModifiedDate": "2025-06-08T00:58:32.1615928Z",
   "Tags": ["coding"],
   "Categories": ["technology"],
   "Slug": "my-new-post",
-  "Status": "published",
+  "Status": "draft",
   "Author": "admin"
 }

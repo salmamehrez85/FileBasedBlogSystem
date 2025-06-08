@@ -13,6 +13,8 @@ var app = builder.Build();
 
 var userService = app.Services.GetRequiredService<UserService>();
 var adminUser = userService.GetUser("admin");
+var adminSalma = userService.GetUser("salma");
+
 if (adminUser == null)
 {
     adminUser = new User
@@ -25,6 +27,17 @@ if (adminUser == null)
     userService.SaveUser(adminUser);
 }
 
+if (adminSalma == null)
+{
+     adminSalma = new User
+    {
+        Username = "salma",
+        Password = UserService.ComputeHash("salma123"),
+        Email = "salma@example.com",
+        Roles = new List<string> { "Admin" }
+    };
+    userService.SaveUser(adminSalma);
+}
 
 app.UseRouting();
 app.UseStaticFiles();

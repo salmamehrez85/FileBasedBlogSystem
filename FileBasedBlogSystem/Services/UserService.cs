@@ -35,6 +35,8 @@ public class UserService
         if (user == null) return false;
 
         var hash = ComputeHash(password);
+         Console.WriteLine($"Computed: {hash}");
+        Console.WriteLine($"Stored:   {user.Password}");
         return user.Password == hash;
     }
 

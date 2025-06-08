@@ -6,28 +6,29 @@ namespace FileBlogSystem.Endpoints;
 
 public static class AuthEndpoints
 {
-    public static void MapAuthEndpoints(this WebApplication app)
+   public static void MapAuthEndpoints(this WebApplication app)
+{
+    app.MapPost("/login", (User loginUser, [FromServices] JwtTokenService jwtService, [FromServices] UserService userService) =>
     {
-        app.MapPost("/login", (User loginUser, [FromServices] JwtTokenService jwtService) =>
+
+        if (userService.ValidateUser(loginUser.Username, loginUser.Password))
         {
-            if (loginUser.Username == "admin" && loginUser.Password == "admin123")
-            {
-                var roles = new List<string> { "Admin" };
-                var token = jwtService.GenerateToken(loginUser.Username, roles);
-                return Results.Ok(new { token });
-            }
-            return Results.Unauthorized();
-        });
+            var user = userService.GetUser(loginUser.Username);
+            var token = jwtService.GenerateToken(loginUser.Username, user!.Roles);
+            return Results.Ok(new { token });
+        }
+        return Results.Unauthorized();
+    });
 
-        app.MapGet("/secure-data", () =>
-        {
-            return Results.Ok("This is protected data.");
-        }).RequireAuthorization();
+    app.MapGet("/secure-data", () =>
+    {
+        return Results.Ok("This is protected data.");
+    }).RequireAuthorization();
 
-        app.MapGet("/admin", () => Results.Ok("Admin area"))
-           .RequireAuthorization("AdminOnly");
+    app.MapGet("/admin", () => Results.Ok("Admin area"))
+       .RequireAuthorization("AdminOnly");
 
-        app.MapGet("/editor", () => Results.Ok("Author or Editor area"))
-           .RequireAuthorization("AuthorOrEditor");
-    }
+    app.MapGet("/editor", () => Results.Ok("Author or Editor area"))
+       .RequireAuthorization("AuthorOrEditor");
+}
 }

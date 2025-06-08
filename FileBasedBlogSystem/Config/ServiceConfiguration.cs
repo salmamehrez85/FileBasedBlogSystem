@@ -9,11 +9,9 @@ public static class ServiceConfiguration
 {
     public static void ConfigureServices(this WebApplicationBuilder builder)
     {
-        // Register services
         builder.Services.AddSingleton<PostService>();
         builder.Services.AddSingleton<RssService>();
         builder.Services.AddSingleton<ConfigService>();
-        // builder.Services.AddSingleton<MarkdownService>();
         builder.Services.AddSingleton<UserService>();
         builder.Services.AddSingleton<JwtTokenService>();
         builder.Services.AddSingleton<MediaService>();

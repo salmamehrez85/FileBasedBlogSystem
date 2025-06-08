@@ -4,8 +4,8 @@
   "Body": "This is my second blog post using markdown.",
   "PublishedDate": "2025-06-04T23:00:34.6098619Z",
   "ModifiedDate": "2025-06-04T23:09:54.0299907Z",
-  "Tags": ["test", "second-post"],
-  "Categories": ["general", "technology"],
+  "Tags": ["ai", "coding"],
+  "Categories": ["technology"],
   "Slug": "my-second-post",
   "Status": "published",
   "Author": "admin"

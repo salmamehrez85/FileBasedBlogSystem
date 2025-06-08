@@ -4,8 +4,8 @@
   "Body": "This is my first blog post using markdown.",
   "PublishedDate": "2025-06-04T22:53:48.681186Z",
   "ModifiedDate": "2025-06-04T22:53:48.6811867Z",
-  "Tags": ["coding", "first-post"],
-  "Categories": ["general"],
+  "Tags": ["general"],
+  "Categories": ["business"],
   "Slug": "my-first-post",
   "Status": "published",
   "Author": "admin"

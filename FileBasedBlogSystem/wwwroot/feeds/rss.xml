@@ -5,6 +5,12 @@
     <link>https://localhost:5030</link>
     <description>Latest blog posts</description>
     <item>
+      <title>My Third Blog Post</title>
+      <link>https://localhost:5030/posts/my-third-post</link>
+      <description>This is my third post</description>
+      <pubDate>Sun, 08 Jun 2025 12:53:33 GMT</pubDate>
+    </item>
+    <item>
       <title>My Second Blog Post</title>
       <link>https://localhost:5030/posts/my-second-post</link>
       <description>This is my second blog post</description>
@@ -15,12 +21,6 @@
       <link>https://localhost:5030/posts/my-first-post</link>
       <description>This is a blog post</description>
       <pubDate>Wed, 04 Jun 2025 22:53:48 GMT</pubDate>
-    </item>
-    <item>
-      <title />
-      <link>https://localhost:5030/posts/my-new-post</link>
-      <description />
-      <pubDate>Mon, 02 Jun 2025 15:45:09 GMT</pubDate>
     </item>
   </channel>
 </rss>

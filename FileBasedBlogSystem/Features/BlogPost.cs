@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 namespace FileBlogSystem.Features;
 
 public class BlogPost
@@ -10,7 +11,8 @@ public class BlogPost
     public List<string> Tags { get; set; } = [];
     public List<string> Categories { get; set; } = [];
     public string Slug { get; set; } = string.Empty;
-    public string Status { get; set; } = "draft";
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public PostStatus Status { get; set; } = PostStatus.Draft;
     public string Author { get; set; } = string.Empty;
 }
 

@@ -15,7 +15,7 @@ public static class PostEndpoints
             var currentPageSize = pageSize ?? 10;
 
             var allPosts = postService.GetAllPosts()
-                .Where(p => p.Status == "published")
+                .Where(p => p.Status == PostStatus.Published)
                 .OrderByDescending(p => p.PublishedDate);
 
             var totalPosts = allPosts.Count();
@@ -47,7 +47,7 @@ public static class PostEndpoints
         app.MapGet("/posts/category/{category}", (string category, [FromServices] PostService postService) =>
         {
             var posts = postService.GetAllPosts()
-                .Where(p => p.Status == "published" && p.Categories.Contains(category, StringComparer.OrdinalIgnoreCase))
+                .Where(p => p.Status == PostStatus.Published && p.Categories.Contains(category, StringComparer.OrdinalIgnoreCase))
                 .OrderByDescending(p => p.PublishedDate)
                 .ToList();
             return Results.Ok(posts);
@@ -56,7 +56,7 @@ public static class PostEndpoints
         app.MapGet("/posts/tag/{tag}", (string tag, [FromServices] PostService postService) =>
         {
             var posts = postService.GetAllPosts()
-                .Where(p => p.Status == "published" && p.Tags.Contains(tag, StringComparer.OrdinalIgnoreCase))
+                .Where(p => p.Status == PostStatus.Published && p.Tags.Contains(tag, StringComparer.OrdinalIgnoreCase))
                 .OrderByDescending(p => p.PublishedDate)
                 .ToList();
             return Results.Ok(posts);
@@ -65,7 +65,7 @@ public static class PostEndpoints
         app.MapGet("/posts/search", (string q, [FromServices] PostService postService) =>
         {
             var posts = postService.GetAllPosts()
-                .Where(p => p.Status == "published" &&
+                .Where(p => p.Status == PostStatus.Published &&
                     (p.Title.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                      p.Description.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                      p.Body.Contains(q, StringComparison.OrdinalIgnoreCase)))
@@ -92,7 +92,7 @@ public static class PostEndpoints
 
             postService.SavePost(post);
 
-            if (post.Status == "published")
+            if (post.Status == PostStatus.Published)
                 rssService.GenerateRssFeed();
 
             return Results.Created($"/posts/{post.Slug}", post);
@@ -128,7 +128,7 @@ public static class PostEndpoints
 
             postService.SavePost(updatedPost);
 
-            if (updatedPost.Status == "published")
+            if (updatedPost.Status == PostStatus.Published)
             {
                 rssService.GenerateRssFeed();
             }

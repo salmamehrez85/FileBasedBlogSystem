@@ -18,7 +18,7 @@ public class RssService
     public void GenerateRssFeed()
     {
         var posts = _postService.GetAllPosts()
-            .Where(p => p.Status == "published")
+            .Where(p => p.Status == PostStatus.Published)
             .OrderByDescending(p => p.PublishedDate)
             .Take(5);
 

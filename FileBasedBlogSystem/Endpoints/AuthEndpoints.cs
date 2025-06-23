@@ -10,13 +10,20 @@ public static class AuthEndpoints
 {
     app.MapPost("/login", async (User loginUser, [FromServices] JwtTokenService jwtService, [FromServices] UserService userService) =>
     {
-        if (await userService.ValidateUserAsync(loginUser.Username, loginUser.Password))
+        try
         {
-            var user = await userService.GetUserAsync(loginUser.Username);
-            var token = jwtService.GenerateToken(loginUser.Username, user!.Roles.Select(r => r.ToString()).ToList());
-            return Results.Ok(new { token });
+            if (await userService.ValidateUserAsync(loginUser.Username, loginUser.Password))
+            {
+                var user = await userService.GetUserAsync(loginUser.Username);
+                var token = jwtService.GenerateToken(loginUser.Username, user!.Roles.Select(r => r.ToString()).ToList());
+                return Results.Ok(new { token });
+            }
+            return Results.Unauthorized();
         }
-        return Results.Unauthorized();
+        catch (Exception ex)
+        {
+            return Results.Problem($"An error occurred: {ex.Message}");
+        }
     });
 
     app.MapGet("/secure-data", () =>

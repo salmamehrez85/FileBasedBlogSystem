@@ -11,15 +11,23 @@ public class MediaService
         if (file.Length > maxFileSize)
             throw new ArgumentException("File size exceeds the 5MB limit.");
 
-
         var allowedContentTypes = new[] { "image/jpeg", "image/png", "image/gif" };
         if (!allowedContentTypes.Contains(file.ContentType))
             throw new ArgumentException("Invalid file type. Only JPG, PNG, and GIF are allowed.");
 
         Directory.CreateDirectory(targetDirectory);
 
-        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+        const int maxFileNameLength = 100;
+        var originalFileName = Path.GetFileNameWithoutExtension(file.FileName);
+        var extension = Path.GetExtension(file.FileName);
+        var safeFileName = originalFileName.Length > maxFileNameLength
+            ? originalFileName.Substring(0, maxFileNameLength)
+            : originalFileName;
+        var fileName = $"{Guid.NewGuid()}_{safeFileName}{extension}";
         var filePath = Path.Combine(targetDirectory, fileName);
+
+        if (filePath.Length > 255)
+            throw new ArgumentException("Resulting file path is too long.");
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {

@@ -44,14 +44,6 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
-app.Use(async (context, next) =>
-{
-    var jwtAuthService = new JwtAuthService(next, userService, builder.Configuration);
-    await jwtAuthService.InvokeAsync(context);
-});
-
-
 app.MapGet("/", () => Results.Ok("Welcome to FileBlogSystem!"));
 app.MapAuthEndpoints();
 app.MapPostEndpoints();

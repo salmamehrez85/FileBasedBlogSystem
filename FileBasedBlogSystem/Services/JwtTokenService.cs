@@ -7,16 +7,22 @@ namespace FileBlogSystem.Services;
 
 public class JwtTokenService
 {
-    private readonly IConfiguration _config;
+    private readonly string _jwtKey;
+    private readonly string _jwtIssuer;
+    private readonly string _jwtAudience;
+    private readonly double _jwtExpireMinutes;
 
-    public JwtTokenService(IConfiguration config)
+    public JwtTokenService(string jwtKey, string jwtIssuer, string jwtAudience, double jwtExpireMinutes)
     {
-        _config = config;
+        _jwtKey = jwtKey;
+        _jwtIssuer = jwtIssuer;
+        _jwtAudience = jwtAudience;
+        _jwtExpireMinutes = jwtExpireMinutes;
     }
 
     public string GenerateToken(string username, List<string> roles)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
@@ -27,10 +33,10 @@ public class JwtTokenService
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var token = new JwtSecurityToken(
-            issuer: _config["Jwt:Issuer"],
-            audience: _config["Jwt:Audience"],
+            issuer: _jwtIssuer,
+            audience: _jwtAudience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:ExpireMinutes"])),
+            expires: DateTime.UtcNow.AddMinutes(_jwtExpireMinutes),
             signingCredentials: creds
         );
 

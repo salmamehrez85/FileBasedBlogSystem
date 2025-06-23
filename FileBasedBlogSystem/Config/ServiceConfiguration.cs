@@ -13,14 +13,20 @@ public static class ServiceConfiguration
         builder.Services.AddSingleton<RssService>();
         builder.Services.AddSingleton<ConfigService>();
         builder.Services.AddSingleton<UserService>();
-        builder.Services.AddSingleton<JwtTokenService>();
         builder.Services.AddSingleton<MediaService>();
 
 
         // Configure JWT Authentication
         var jwtSecretKey = builder.Configuration["Jwt:Key"] ?? "a1b2c3d4e5f67890123456789abcdef0fedcba9876543210abcdef1234567890";
-        var key = Encoding.ASCII.GetBytes(jwtSecretKey);
+        var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "MyIssuer";
+        var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "MyAudience";
+        var jwtExpireMinutes = double.TryParse(builder.Configuration["Jwt:ExpireMinutes"], out var exp) ? exp : 60;
 
+        builder.Services.AddSingleton<JwtTokenService>(sp =>
+            new JwtTokenService(jwtSecretKey, jwtIssuer, jwtAudience, jwtExpireMinutes)
+        );
+
+        // Configure Authentication
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -28,14 +34,15 @@ public static class ServiceConfiguration
         })
         .AddJwtBearer(options =>
         {
-            options.RequireHttpsMetadata = false;
-            options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false
+                ValidIssuer = jwtIssuer,
+                ValidAudience = jwtAudience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
             };
         });
 

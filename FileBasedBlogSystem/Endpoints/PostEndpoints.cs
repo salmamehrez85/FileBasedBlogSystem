@@ -9,12 +9,12 @@ public static class PostEndpoints
 {
     public static void MapPostEndpoints(this WebApplication app)
     {
-        app.MapGet("/posts", (int? page, int? pageSize, [FromServices] PostService postService) =>
+        app.MapGet("/posts", async (int? page, int? pageSize, [FromServices] PostService postService) =>
         {
             var currentPage = page ?? 1;
             var currentPageSize = pageSize ?? 10;
 
-            var allPosts = postService.GetAllPosts()
+            var allPosts = (await postService.GetAllPostsAsync())
                 .Where(p => p.Status == PostStatus.Published)
                 .OrderByDescending(p => p.PublishedDate);
 
@@ -38,33 +38,33 @@ public static class PostEndpoints
             });
         });
 
-        app.MapGet("/posts/{slug}", (string slug, [FromServices] PostService postService) =>
+        app.MapGet("/posts/{slug}", async (string slug, [FromServices] PostService postService) =>
         {
-            var post = postService.GetPostBySlug(slug);
+            var post = await postService.GetPostBySlugAsync(slug);
             return post is not null ? Results.Ok(post) : Results.NotFound();
         });
 
-        app.MapGet("/posts/category/{category}", (string category, [FromServices] PostService postService) =>
+        app.MapGet("/posts/category/{category}", async (string category, [FromServices] PostService postService) =>
         {
-            var posts = postService.GetAllPosts()
+            var posts = (await postService.GetAllPostsAsync())
                 .Where(p => p.Status == PostStatus.Published && p.Categories.Contains(category, StringComparer.OrdinalIgnoreCase))
                 .OrderByDescending(p => p.PublishedDate)
                 .ToList();
             return Results.Ok(posts);
         });
 
-        app.MapGet("/posts/tag/{tag}", (string tag, [FromServices] PostService postService) =>
+        app.MapGet("/posts/tag/{tag}", async (string tag, [FromServices] PostService postService) =>
         {
-            var posts = postService.GetAllPosts()
+            var posts = (await postService.GetAllPostsAsync())
                 .Where(p => p.Status == PostStatus.Published && p.Tags.Contains(tag, StringComparer.OrdinalIgnoreCase))
                 .OrderByDescending(p => p.PublishedDate)
                 .ToList();
             return Results.Ok(posts);
         });
 
-        app.MapGet("/posts/search", (string q, [FromServices] PostService postService) =>
+        app.MapGet("/posts/search", async (string q, [FromServices] PostService postService) =>
         {
-            var posts = postService.GetAllPosts()
+            var posts = (await postService.GetAllPostsAsync())
                 .Where(p => p.Status == PostStatus.Published &&
                     (p.Title.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                      p.Description.Contains(q, StringComparison.OrdinalIgnoreCase) ||
@@ -74,7 +74,7 @@ public static class PostEndpoints
             return Results.Ok(posts);
         });
 
-        app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] (BlogPost post, HttpContext context, [FromServices] PostService postService, [FromServices] RssService rssService) =>
+        app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] async (BlogPost post, HttpContext context, [FromServices] PostService postService, [FromServices] RssService rssService) =>
         {
             var user = context.Items["User"] as User;
             if (user == null) return Results.Unauthorized();
@@ -82,7 +82,7 @@ public static class PostEndpoints
             if (!SlugService.IsValidSlug(post.Slug))
                 return Results.BadRequest("Slug must be in kebab-case (lowercase, hyphen-separated).");
 
-            var existing = postService.GetPostBySlug(post.Slug);
+            var existing = await postService.GetPostBySlugAsync(post.Slug);
             if (existing != null)
                 return Results.Conflict("Slug already exists.");
 
@@ -90,20 +90,20 @@ public static class PostEndpoints
             post.PublishedDate = DateTime.UtcNow;
             post.ModifiedDate = DateTime.UtcNow;
 
-            postService.SavePost(post);
+            await postService.SavePostAsync(post);
 
             if (post.Status == PostStatus.Published)
-                rssService.GenerateRssFeed();
+                await rssService.GenerateRssFeedAsync();
 
             return Results.Created($"/posts/{post.Slug}", post);
         });
 
-        app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] (string slug, BlogPost updatedPost, HttpContext context, [FromServices] PostService postService, [FromServices] RssService rssService) =>
+        app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] async (string slug, BlogPost updatedPost, HttpContext context, [FromServices] PostService postService, [FromServices] RssService rssService) =>
         {
             var user = context.Items["User"] as User;
             if (user == null) return Results.Unauthorized();
 
-            var existing = postService.GetPostBySlug(slug);
+            var existing = await postService.GetPostBySlugAsync(slug);
             if (existing == null) return Results.NotFound();
 
             var isOwner = existing.Author == user.Username;
@@ -117,7 +117,7 @@ public static class PostEndpoints
                 if (!SlugService.IsValidSlug(updatedPost.Slug))
                     return Results.BadRequest("Slug must be in kebab-case (lowercase, hyphen-separated).");
 
-                var slugExists = postService.GetPostBySlug(updatedPost.Slug);
+                var slugExists = await postService.GetPostBySlugAsync(updatedPost.Slug);
                 if (slugExists != null)
                     return Results.Conflict("Slug already exists.");
             }
@@ -126,21 +126,21 @@ public static class PostEndpoints
             updatedPost.PublishedDate = existing.PublishedDate;
             updatedPost.ModifiedDate = DateTime.UtcNow;
 
-            postService.SavePost(updatedPost);
+            await postService.SavePostAsync(updatedPost);
 
             if (updatedPost.Status == PostStatus.Published)
             {
-                rssService.GenerateRssFeed();
+                await rssService.GenerateRssFeedAsync();
             }
             return Results.Ok(updatedPost);
         });
 
-        app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] (string slug, [FromServices] PostService postService) =>
+        app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] async (string slug, [FromServices] PostService postService) =>
         {
-            var post = postService.GetPostBySlug(slug);
+            var post = await postService.GetPostBySlugAsync(slug);
             if (post == null) return Results.NotFound();
 
-            postService.DeletePost(slug);
+            await postService.DeletePostAsync(slug);
             return Results.NoContent();
         });
     }

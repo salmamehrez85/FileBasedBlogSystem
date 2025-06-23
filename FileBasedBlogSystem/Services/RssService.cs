@@ -15,9 +15,9 @@ public class RssService
         _env = env;
     }
 
-    public void GenerateRssFeed()
+    public async Task GenerateRssFeedAsync()
     {
-        var posts = _postService.GetAllPosts()
+        var posts = (await _postService.GetAllPostsAsync())
             .Where(p => p.Status == PostStatus.Published)
             .OrderByDescending(p => p.PublishedDate)
             .Take(5);

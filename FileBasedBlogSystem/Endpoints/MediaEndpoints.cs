@@ -17,7 +17,7 @@ public static class MediaEndpoints
             var user = context.Items["User"] as User;
             if (user == null) return Results.Unauthorized();
 
-            var post = postService.GetPostBySlug(slug);
+            var post = await postService.GetPostBySlugAsync(slug);
             if (post == null) return Results.NotFound("Post not found.");
 
             if (file == null || file.Length == 0)

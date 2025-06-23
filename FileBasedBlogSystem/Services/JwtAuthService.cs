@@ -27,7 +27,7 @@ public class JwtAuthService
             var username = context.User.Identity.Name;
             if (!string.IsNullOrEmpty(username))
             {
-                var user = _userService.GetUser(username);
+                var user = await _userService.GetUserAsync(username);
                 if (user != null)
                 {
                     context.Items["User"] = user;
@@ -37,6 +37,5 @@ public class JwtAuthService
 
         await _next(context);
     }
-
 
 } 

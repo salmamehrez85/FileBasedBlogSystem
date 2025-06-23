@@ -12,8 +12,8 @@ var app = builder.Build();
 
 
 var userService = app.Services.GetRequiredService<UserService>();
-var adminUser = userService.GetUser("admin");
-var adminSalma = userService.GetUser("salma");
+var adminUser = await userService.GetUserAsync("admin");
+var adminSalma = await userService.GetUserAsync("salma");
 
 if (adminUser == null)
 {
@@ -24,7 +24,7 @@ if (adminUser == null)
         Email = "admin@example.com",
         Roles = new List<Roles> { Roles.Admin }
     };
-    userService.SaveUser(adminUser);
+    await userService.SaveUserAsync(adminUser);
 }
 
 if (adminSalma == null)
@@ -36,7 +36,7 @@ if (adminSalma == null)
         Email = "salma@example.com",
         Roles = new List<Roles> { Roles.Admin }
     };
-    userService.SaveUser(adminSalma);
+    await userService.SaveUserAsync(adminSalma);
 }
 
 app.UseRouting();
@@ -49,4 +49,4 @@ app.MapAuthEndpoints();
 app.MapPostEndpoints();
 app.MapMediaEndpoints();
 
-app.Run();
+await app.RunAsync();

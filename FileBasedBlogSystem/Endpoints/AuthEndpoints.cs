@@ -8,12 +8,11 @@ public static class AuthEndpoints
 {
    public static void MapAuthEndpoints(this WebApplication app)
 {
-    app.MapPost("/login", (User loginUser, [FromServices] JwtTokenService jwtService, [FromServices] UserService userService) =>
+    app.MapPost("/login", async (User loginUser, [FromServices] JwtTokenService jwtService, [FromServices] UserService userService) =>
     {
-
-        if (userService.ValidateUser(loginUser.Username, loginUser.Password))
+        if (await userService.ValidateUserAsync(loginUser.Username, loginUser.Password))
         {
-            var user = userService.GetUser(loginUser.Username);
+            var user = await userService.GetUserAsync(loginUser.Username);
             var token = jwtService.GenerateToken(loginUser.Username, user!.Roles.Select(r => r.ToString()).ToList());
             return Results.Ok(new { token });
         }

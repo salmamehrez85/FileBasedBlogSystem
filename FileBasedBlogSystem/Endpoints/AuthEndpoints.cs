@@ -14,7 +14,7 @@ public static class AuthEndpoints
         if (userService.ValidateUser(loginUser.Username, loginUser.Password))
         {
             var user = userService.GetUser(loginUser.Username);
-            var token = jwtService.GenerateToken(loginUser.Username, user!.Roles);
+            var token = jwtService.GenerateToken(loginUser.Username, user!.Roles.Select(r => r.ToString()).ToList());
             return Results.Ok(new { token });
         }
         return Results.Unauthorized();

@@ -22,7 +22,7 @@ if (adminUser == null)
         Username = "admin",
         Password = UserService.ComputeHash("admin123"),
         Email = "admin@example.com",
-        Roles = new List<string> { "Admin" }
+        Roles = new List<Roles> { Roles.Admin }
     };
     userService.SaveUser(adminUser);
 }
@@ -34,7 +34,7 @@ if (adminSalma == null)
         Username = "salma",
         Password = UserService.ComputeHash("salma123"),
         Email = "salma@example.com",
-        Roles = new List<string> { "Admin" }
+        Roles = new List<Roles> { Roles.Admin }
     };
     userService.SaveUser(adminSalma);
 }

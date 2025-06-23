@@ -107,7 +107,7 @@ public static class PostEndpoints
             if (existing == null) return Results.NotFound();
 
             var isOwner = existing.Author == user.Username;
-            var isEditor = user.Roles.Contains("Editor") || user.Roles.Contains("Admin");
+            var isEditor = user.Roles.Contains(Roles.Editor) || user.Roles.Contains(Roles.Admin);
 
             if (!isOwner && !isEditor)
                 return Results.Forbid();

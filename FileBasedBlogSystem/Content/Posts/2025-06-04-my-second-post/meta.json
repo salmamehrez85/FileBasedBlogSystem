@@ -1,12 +1,12 @@
 {
-  "Title": "My Second Blog Post",
-  "Description": "This is my second blog post",
-  "Body": "This is my second blog post using markdown.",
-  "PublishedDate": "2025-06-04T23:00:34.6098619Z",
-  "ModifiedDate": "2025-06-04T23:09:54.0299907Z",
-  "Tags": ["ai", "coding"],
-  "Categories": ["technology"],
-  "Slug": "my-second-post",
-  "Status": "published",
-  "Author": "admin"
+  "title": "My Second Blog Post",
+  "description": "This is my second blog post",
+  "body": "This is my second blog post using markdown.",
+  "published-date": "2025-06-04T23:00:34.6098619Z",
+  "modified-date": "2025-06-04T23:09:54.0299907Z",
+  "tags": ["ai", "coding"],
+  "categories": ["technology"],
+  "slug": "my-second-post",
+  "status": "published",
+  "author": "admin"
 }

@@ -1,8 +1,8 @@
 {
-  "Name": "Coding",
-  "Description": "Posts related to programming, software development, and coding best practices.",
-  "Slug": "coding",
-  "PostCount": 0,
-  "CreatedAt": "2025-06-02",
-  "ModifiedAt": null
+  "name": "Coding",
+  "description": "Posts related to programming, software development, and coding best practices.",
+  "slug": "coding",
+  "post-count": 0,
+  "created-at": "2025-06-02",
+  "modified-at": null
 }

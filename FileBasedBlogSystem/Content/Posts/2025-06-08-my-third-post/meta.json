@@ -1,12 +1,12 @@
 {
-  "Title": "My Third Blog Post",
-  "Description": "This is my third post",
-  "Body": "Hello! This is content written.",
-  "PublishedDate": "2025-06-08T12:53:33.3343641Z",
-  "ModifiedDate": "2025-06-08T12:53:33.3343648Z",
-  "Tags": ["ai"],
-  "Categories": ["technology"],
-  "Slug": "my-third-post",
-  "Status": "published",
-  "Author": "salma"
+  "title": "My Third Blog Post",
+  "description": "This is my third post",
+  "body": "Hello! This is content written.",
+  "published-date": "2025-06-08T12:53:33.3343641Z",
+  "modified-date": "2025-06-08T12:53:33.3343648Z",
+  "tags": ["ai"],
+  "categories": ["technology"],
+  "slug": "my-third-post",
+  "status": "published",
+  "author": "salma"
 }

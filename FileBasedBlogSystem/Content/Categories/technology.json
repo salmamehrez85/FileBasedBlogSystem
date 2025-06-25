@@ -1,8 +1,8 @@
 {
-  "Name": "Technology",
-  "Description": "Posts related to technology.",
-  "Slug": "technology",
-  "PostCount": 0,
-  "CreatedAt": "2025-06-02",
-  "ModifiedAt": null
+  "name": "Technology",
+  "description": "Posts related to technology.",
+  "slug": "technology",
+  "post-count": 0,
+  "created-at": "2025-06-02",
+  "modified-at": null
 }

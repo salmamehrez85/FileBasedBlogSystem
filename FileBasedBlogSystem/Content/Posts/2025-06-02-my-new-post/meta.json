@@ -1,12 +1,12 @@
 {
-  "Title": "My Updated Post",
-  "Description": "This is an updated post",
-  "Body": "This is my updated post body",
-  "PublishedDate": "2025-06-02T15:45:09.1861381Z",
-  "ModifiedDate": "2025-06-08T00:58:32.1615928Z",
-  "Tags": ["coding"],
-  "Categories": ["technology"],
-  "Slug": "my-new-post",
-  "Status": "draft",
-  "Author": "admin"
+  "title": "My Updated Post",
+  "description": "This is an updated post",
+  "body": "This is my updated post body",
+  "published-date": "2025-06-02T15:45:09.1861381Z",
+  "modified-date": "2025-06-08T00:58:32.1615928Z",
+  "tags": ["coding"],
+  "categories": ["technology"],
+  "slug": "my-new-post",
+  "status": "draft",
+  "author": "admin"
 }

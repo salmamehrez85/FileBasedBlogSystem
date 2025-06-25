@@ -1,12 +1,12 @@
 {
-  "Title": "My First Blog Post",
-  "Description": "This is a blog post",
-  "Body": "This is my first blog post using markdown.",
-  "PublishedDate": "2025-06-04T22:53:48.681186Z",
-  "ModifiedDate": "2025-06-04T22:53:48.6811867Z",
-  "Tags": ["general"],
-  "Categories": ["business"],
-  "Slug": "my-first-post",
-  "Status": "published",
-  "Author": "admin"
+  "title": "My First Blog Post",
+  "description": "This is a blog post",
+  "body": "This is my first blog post using markdown.",
+  "published-date": "2025-06-04T22:53:48.681186Z",
+  "modified-date": "2025-06-04T22:53:48.6811867Z",
+  "tags": ["general"],
+  "categories": ["business"],
+  "slug": "my-first-post",
+  "status": "published",
+  "author": "admin"
 }

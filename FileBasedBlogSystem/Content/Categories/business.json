@@ -1,8 +1,8 @@
 {
-  "Name": "Business",
-  "Description": "Posts related to business, marketing, and finance.",
-  "Slug": "business",
-  "PostCount": 0,
-  "CreatedAt": "2025-06-08",
-  "ModifiedAt": null
+  "name": "Business",
+  "description": "Posts related to business, marketing, and finance.",
+  "slug": "business",
+  "post-count": 0,
+  "created-at": "2025-06-08",
+  "modified-at": null
 }

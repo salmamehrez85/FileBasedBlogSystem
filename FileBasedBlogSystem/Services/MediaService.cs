@@ -1,6 +1,6 @@
 namespace FileBlogSystem.Services;
 
-public class MediaService
+public class MediaService : IMediaService
 {
     public async Task SaveAndResizeImageAsync(IFormFile file, string targetDirectory)
     {

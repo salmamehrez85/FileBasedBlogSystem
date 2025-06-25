@@ -9,11 +9,11 @@ public static class ServiceConfiguration
 {
     public static void ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<PostService>();
-        builder.Services.AddSingleton<RssService>();
-        builder.Services.AddSingleton<ConfigService>();
-        builder.Services.AddSingleton<UserService>();
-        builder.Services.AddSingleton<MediaService>();
+        builder.Services.AddSingleton<IPostService, PostService>();
+        builder.Services.AddSingleton<IRssService, RssService>();
+        builder.Services.AddSingleton<IConfigService, ConfigService>();
+        builder.Services.AddSingleton<IUserService, UserService>();
+        builder.Services.AddSingleton<IMediaService, MediaService>();
 
 
         // Configure JWT Authentication

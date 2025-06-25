@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace FileBlogSystem.Services;
 
-public class ConfigService
+public class ConfigService : IConfigService
 {
     private readonly string _siteConfigPath = Path.Combine("Config", "site.json");
     private readonly string _routesConfigPath = Path.Combine("Config", "routes.json");

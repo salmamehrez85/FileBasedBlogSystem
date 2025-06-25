@@ -11,7 +11,7 @@ builder.ConfigureServices();
 var app = builder.Build();
 
 
-var userService = app.Services.GetRequiredService<UserService>();
+var userService = app.Services.GetRequiredService<IUserService>();
 var adminUser = await userService.GetUserAsync("admin");
 var adminSalma = await userService.GetUserAsync("salma");
 

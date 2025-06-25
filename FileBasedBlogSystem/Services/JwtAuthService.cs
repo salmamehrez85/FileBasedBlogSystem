@@ -10,10 +10,10 @@ namespace FileBlogSystem.Services;
 public class JwtAuthService
 {
     private readonly RequestDelegate _next;
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
     private readonly IConfiguration _config;
 
-    public JwtAuthService(RequestDelegate next, UserService userService, IConfiguration config)
+    public JwtAuthService(RequestDelegate next, IUserService userService, IConfiguration config)
     {
         _next = next;
         _userService = userService;

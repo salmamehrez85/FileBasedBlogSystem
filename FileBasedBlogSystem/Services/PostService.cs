@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace FileBlogSystem.Services;
 
-public class PostService
+public class PostService : IPostService
 {
     private readonly string _postsRoot = Path.Combine("Content", "Posts");
 

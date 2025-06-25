@@ -4,12 +4,12 @@ using FileBlogSystem.Features;
 
 namespace FileBlogSystem.Services;
 
-public class RssService
+public class RssService : IRssService
 {
-    private readonly PostService _postService;
+    private readonly IPostService _postService;
     private readonly IWebHostEnvironment _env;
 
-    public RssService(PostService postService, IWebHostEnvironment env)
+    public RssService(IPostService postService, IWebHostEnvironment env)
     {
         _postService = postService;
         _env = env;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FileBlogSystem.Services;
 
-public class UserService
+public class UserService : IUserService
 {
     private readonly string _usersRoot = Path.Combine("Content", "Users");
 

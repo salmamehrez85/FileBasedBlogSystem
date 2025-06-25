@@ -9,7 +9,7 @@ public static class PostEndpoints
 {
     public static void MapPostEndpoints(this WebApplication app)
     {
-        app.MapGet("/posts", async (int? page, int? pageSize, [FromServices] PostService postService) =>
+        app.MapGet("/posts", async (int? page, int? pageSize, [FromServices] IPostService postService) =>
         {
             try
             {
@@ -45,7 +45,7 @@ public static class PostEndpoints
             }
         });
 
-        app.MapGet("/posts/{slug}", async (string slug, [FromServices] PostService postService) =>
+        app.MapGet("/posts/{slug}", async (string slug, [FromServices] IPostService postService) =>
         {
             try
             {
@@ -58,7 +58,7 @@ public static class PostEndpoints
             }
         });
 
-        app.MapGet("/posts/category/{category}", async (string category, [FromServices] PostService postService) =>
+        app.MapGet("/posts/category/{category}", async (string category, [FromServices] IPostService postService) =>
         {
             try
             {
@@ -74,7 +74,7 @@ public static class PostEndpoints
             }
         });
 
-        app.MapGet("/posts/tag/{tag}", async (string tag, [FromServices] PostService postService) =>
+        app.MapGet("/posts/tag/{tag}", async (string tag, [FromServices] IPostService postService) =>
         {
             try
             {
@@ -90,7 +90,7 @@ public static class PostEndpoints
             }
         });
 
-        app.MapGet("/posts/search", async (string q, [FromServices] PostService postService) =>
+        app.MapGet("/posts/search", async (string q, [FromServices] IPostService postService) =>
         {
             try
             {
@@ -109,7 +109,7 @@ public static class PostEndpoints
             }
         });
 
-        app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] async (BlogPost post, HttpContext context, [FromServices] PostService postService, [FromServices] RssService rssService) =>
+        app.MapPost("/posts", [Authorize(Roles = "Author,Admin")] async (BlogPost post, HttpContext context, [FromServices] IPostService postService, [FromServices] IRssService rssService) =>
         {
             try
             {
@@ -140,7 +140,7 @@ public static class PostEndpoints
             }
         });
 
-        app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] async (string slug, BlogPost updatedPost, HttpContext context, [FromServices] PostService postService, [FromServices] RssService rssService) =>
+        app.MapPut("/posts/{slug}", [Authorize(Roles = "Author,Editor,Admin")] async (string slug, BlogPost updatedPost, HttpContext context, [FromServices] IPostService postService, [FromServices] IRssService rssService) =>
         {
             try
             {
@@ -184,7 +184,7 @@ public static class PostEndpoints
             }
         });
 
-        app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] async (string slug, [FromServices] PostService postService) =>
+        app.MapDelete("/posts/{slug}", [Authorize(Roles = "Admin")] async (string slug, [FromServices] IPostService postService) =>
         {
             try
             {

@@ -11,8 +11,8 @@ public static class MediaEndpoints
             HttpContext context,
             string slug,
             IFormFile file,
-            PostService postService,
-            MediaService imageService) =>
+            IPostService postService,
+            IMediaService imageService) =>
         {
             try
             {

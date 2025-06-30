@@ -8,7 +8,7 @@ public static class AuthEndpoints
 {
    public static void MapAuthEndpoints(this WebApplication app)
 {
-    app.MapPost("/login", async (User loginUser, [FromServices] JwtTokenService jwtService, [FromServices] UserService userService) =>
+    app.MapPost("/login", async (User loginUser, [FromServices] JwtTokenService jwtService, [FromServices] IUserService userService) =>
     {
         try
         {
@@ -19,6 +19,34 @@ public static class AuthEndpoints
                 return Results.Ok(new { token });
             }
             return Results.Unauthorized();
+        }
+        catch (Exception ex)
+        {
+            return Results.Problem($"An error occurred: {ex.Message}");
+        }
+    });
+
+    app.MapPost("/register", async (User newUser, [FromServices] IUserService userService) =>
+    {
+        try
+        {
+            var existingUser = await userService.GetUserAsync(newUser.Username);
+            if (existingUser != null)
+            {
+                return Results.Conflict("Username already exists.");
+            }
+
+            // Hash the password before saving
+            newUser.Password = UserService.ComputeHash(newUser.Password);
+
+            // Assign Author role if not provided
+            if (newUser.Roles == null || newUser.Roles.Count == 0)
+            {
+                newUser.Roles = new List<Roles> { Roles.Author };
+            }
+
+            await userService.SaveUserAsync(newUser);
+            return Results.Created($"/users/{newUser.Username}", newUser);
         }
         catch (Exception ex)
         {

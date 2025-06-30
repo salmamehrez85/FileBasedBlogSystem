@@ -39,12 +39,12 @@ if (adminSalma == null)
     await userService.SaveUserAsync(adminSalma);
 }
 
+app.UseDefaultFiles();
 app.UseRouting();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", () => Results.Ok("Welcome to FileBlogSystem!"));
 app.MapAuthEndpoints();
 app.MapPostEndpoints();
 app.MapMediaEndpoints();

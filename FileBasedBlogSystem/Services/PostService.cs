@@ -13,19 +13,22 @@ public class PostService : IPostService
             return Enumerable.Empty<BlogPost>();
 
         var posts = new List<BlogPost>();
-
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = new KebabCaseNamingPolicy(),
+            Converters = { new PostStatusJsonConverter() }
+        };
         foreach (var dir in Directory.GetDirectories(_postsRoot))
         {
             var metaPath = Path.Combine(dir, "meta.json");
             if (File.Exists(metaPath))
             {
                 var json = await File.ReadAllTextAsync(metaPath);
-                var post = JsonSerializer.Deserialize<BlogPost>(json);
+                var post = JsonSerializer.Deserialize<BlogPost>(json, options);
                 if (post != null)
                     posts.Add(post);
             }
         }
-
         return posts.OrderByDescending(p => p.PublishedDate);
     }
 
@@ -40,7 +43,12 @@ public class PostService : IPostService
         if (!File.Exists(metaPath)) return null;
 
         var json = await File.ReadAllTextAsync(metaPath);
-        return JsonSerializer.Deserialize<BlogPost>(json);
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = new KebabCaseNamingPolicy(),
+            Converters = { new PostStatusJsonConverter() }
+        };
+        return JsonSerializer.Deserialize<BlogPost>(json, options);
     }
 
     public async Task SavePostAsync(BlogPost post)
@@ -69,5 +77,29 @@ public class PostService : IPostService
         {
             Directory.Delete(postDir, true);
         }
+    }
+}
+
+public class KebabCaseNamingPolicy : JsonNamingPolicy
+{
+    public override string ConvertName(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+            return name;
+        var result = "";
+        for (int i = 0; i < name.Length; i++)
+        {
+            if (char.IsUpper(name[i]))
+            {
+                if (i > 0)
+                    result += "-";
+                result += char.ToLowerInvariant(name[i]);
+            }
+            else
+            {
+                result += name[i];
+            }
+        }
+        return result;
     }
 }
